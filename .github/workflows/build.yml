@@ -9,13 +9,13 @@ on:
   schedule:
     - cron: '0 3 * * *'
   push:
-    branches: [ "main" ]
+    branches: [ "repo-as-variable" ]
 
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: docker.io
   # github.repository as <account>/<repo>
-  IMAGE_NAME: universonic/stable-diffusion-webui
+  IMAGE_NAME: ${{ github.repository }}
 
 
 jobs:
@@ -46,6 +46,9 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set image name to lowercase
+        run: echo "IMAGE_NAME=$(echo "$IMAGE_NAME" | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
