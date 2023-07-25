@@ -9,7 +9,7 @@ on:
   schedule:
     - cron: '0 3 * * *'
   push:
-    branches: [ "repo-as-variable" ]
+    branches: [ "main" ]
 
 env:
   # Use docker.io for Docker Hub if empty
