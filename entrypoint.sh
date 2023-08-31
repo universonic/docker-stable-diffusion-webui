@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 
-/app/stable-diffusion-webui/webui.sh "$@"
+pushd /app/stable-diffusion-webui
+./webui.sh "$@"
+popd
