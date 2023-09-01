@@ -1,4 +1,4 @@
-FROM universonic/cuda:11.7.1-ubuntu2210-base
+FROM universonic/cuda:11.7.1-ubuntu2210-base as minimal
 
 COPY entrypoint.sh /app/entrypoint.sh
 
@@ -14,7 +14,9 @@ RUN apt update && \
 USER sduser
 WORKDIR /app
 
-RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui stable-diffusion-webui
+RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui stable-diffusion-webui && \
+    cd stable-diffusion-webui && \
+    ./webui.sh -h
 
 VOLUME /app/stable-diffusion-webui/extensions
 VOLUME /app/stable-diffusion-webui/models
@@ -26,4 +28,20 @@ EXPOSE 8080
 ENV PYTORCH_CUDA_ALLOC_CONF=garbage_collection_threshold:0.9,max_split_size_mb:512
 
 ENTRYPOINT ["/app/entrypoint.sh", "--update-check", "--xformers", "--listen", "--port", "8080"]
-CMD ["--medvram"]
+
+
+FROM minimal as full
+
+RUN cd /app/stable-diffusion-webui && \
+    ./webui.sh -h
+
+VOLUME /app/stable-diffusion-webui/extensions
+VOLUME /app/stable-diffusion-webui/models
+VOLUME /app/stable-diffusion-webui/outputs
+VOLUME /app/stable-diffusion-webui/localizations
+
+EXPOSE 8080
+
+ENV PYTORCH_CUDA_ALLOC_CONF=garbage_collection_threshold:0.9,max_split_size_mb:512
+
+ENTRYPOINT ["/app/entrypoint.sh", "--update-check", "--xformers", "--listen", "--port", "8080"]
