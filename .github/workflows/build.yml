@@ -58,6 +58,7 @@ jobs:
             type=schedule,pattern=nightly-{{date 'YYYYMMDDhhmmss'}}
             type=schedule,pattern=latest
             type=sha,format=short
+            type=raw,value=minimal
 
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
@@ -68,7 +69,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=schedule,pattern=nightly-{{date 'YYYYMMDDhhmmss'}}-full
-            type=schedule,pattern=latest
+            type=raw,value=full
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
