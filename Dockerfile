@@ -1,4 +1,4 @@
-FROM universonic/cuda:11.7.1-ubuntu2210-base as minimal
+FROM universonic/cuda:11.7.1-ubuntu2204-base as minimal
 
 COPY entrypoint.sh /app/entrypoint.sh
 
