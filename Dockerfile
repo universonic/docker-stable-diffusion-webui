@@ -20,6 +20,9 @@ RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui stable-dif
 
 WORKDIR /app/stable-diffusion-webui
 VOLUME /app/stable-diffusion-webui/extensions
+VOLUME /app/stable-diffusion-webui/textual_inversion_templates
+VOLUME /app/stable-diffusion-webui/embeddings
+VOLUME /app/stable-diffusion-webui/inputs
 VOLUME /app/stable-diffusion-webui/models
 VOLUME /app/stable-diffusion-webui/outputs
 VOLUME /app/stable-diffusion-webui/localizations
@@ -35,16 +38,4 @@ FROM minimal as full
 
 RUN cd /app/stable-diffusion-webui && \
     touch install.log && \
-    timeout 2h bash -c "./webui.sh --skip-torch-cuda-test --no-download-sd-model 2>&1 | tee install.log &" && \
-    sleep 5 && while true; do grep -q "No checkpoints found." install.log && rm -f install.log && exit 0; grep -q "ERROR" install.log && exit 1; sleep 3; done
-
-VOLUME /app/stable-diffusion-webui/extensions
-VOLUME /app/stable-diffusion-webui/models
-VOLUME /app/stable-diffusion-webui/outputs
-VOLUME /app/stable-diffusion-webui/localizations
-
-EXPOSE 8080
-
-ENV PYTORCH_CUDA_ALLOC_CONF=garbage_collection_threshold:0.9,max_split_size_mb:512
-
-ENTRYPOINT ["/app/entrypoint.sh", "--update-check", "--xformers", "--listen", "--port", "8080"]
+    timeout 2h bash -c "./webui.sh --skip-torch-cuda-test --no-download-sd-model --exit"
