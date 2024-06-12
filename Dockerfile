@@ -1,4 +1,4 @@
-FROM universonic/cuda:11.7.1-ubuntu2204-base as minimal
+FROM nvidia/cuda:12.1.1-base-ubuntu22.04 as minimal
 
 COPY entrypoint.sh /app/entrypoint.sh
 
