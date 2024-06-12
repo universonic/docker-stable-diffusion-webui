@@ -1,4 +1,4 @@
-FROM nvidia/cuda:12.1.1-base-ubuntu22.04 as minimal
+FROM nvidia/cuda:12.1.1-runtime-ubuntu22.04 as minimal
 
 COPY entrypoint.sh /app/entrypoint.sh
 
@@ -29,6 +29,7 @@ VOLUME /app/stable-diffusion-webui/localizations
 
 EXPOSE 8080
 
+ENV LD_PRELOAD=/usr/local/cuda-12.1/targets/x86_64-linux/lib/libcusparse.so.12
 ENV PYTORCH_CUDA_ALLOC_CONF=garbage_collection_threshold:0.9,max_split_size_mb:512
 
 ENTRYPOINT ["/app/entrypoint.sh", "--update-check", "--xformers", "--listen", "--port", "8080"]
