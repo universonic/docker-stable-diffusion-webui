@@ -32,7 +32,7 @@ EXPOSE 8080
 ENV LD_PRELOAD=/usr/local/cuda-12.1/targets/x86_64-linux/lib/libcusparse.so.12
 ENV PYTORCH_CUDA_ALLOC_CONF=garbage_collection_threshold:0.9,max_split_size_mb:512
 
-ENTRYPOINT ["/app/entrypoint.sh", "--update-check", "--xformers", "--listen", "--port", "8080"]
+ENTRYPOINT ["/app/entrypoint.sh", "--update-check", "--xformers", "--listen", "--enable-insecure-extension-access", "--port", "8080"]
 
 
 FROM minimal as full
